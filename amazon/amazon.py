@@ -37,3 +37,8 @@ class Amazon(webdriver.Chrome):
         filtration = AmazonFiltration(driver=self)
         filtration.show_categories(categories_element)
         filtration.apply_category(categories_element)
+
+    def report_results(self):
+        results_elements = self.find_elements_by_class_name(
+            'aok-inline-block.zg-item'
+            )
