@@ -1,10 +1,16 @@
 from amazon.amazon import Amazon
+from amazon.amazon_excel import AmazonExcel
 
 try:
     with Amazon() as bot:
         bot.enter_site()
         bot.best_sellers()
-        bot.select_category()
+        category = bot.select_category()
+        products_list = bot.report_results()
+    excel = AmazonExcel(category)
+    excel.create_layout()
+    excel.write_results(products_list)
+    excel.save_and_close()
 except Exception as e:
     if 'in PATH' in str(e):
         print(

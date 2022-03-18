@@ -5,8 +5,8 @@ class AmazonReport:
     def get_items_attributes(self):
         products = []
         for item in self.result_elements:
-            nome = item.find_element_by_class_name('p13n-sc-truncated').text
-            nota = item.find_elements_by_class_name('a-link-normal')[1].get_attribute('title')
+            nome = item.find_element_by_tag_name('img').get_attribute('alt')
+            nota = item.find_element_by_css_selector('a[title*="estrela"]').get_attribute('title')
             try:
                 valor = item.find_element_by_class_name('a-size-base.a-color-price').text
             except:

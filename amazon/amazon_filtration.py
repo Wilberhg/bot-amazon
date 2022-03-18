@@ -33,3 +33,5 @@ class AmazonFiltration:
             if self.opcoes[opcao] in element.text:
                 element.click()
                 break
+
+        return self.opcoes[opcao].strip()

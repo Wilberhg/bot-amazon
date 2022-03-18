@@ -1,11 +1,16 @@
-from selenium.webdriver.chrome import options
 import amazon.constants as const
 import os
 from selenium import webdriver
 from amazon.amazon_filtration import AmazonFiltration
+from amazon.amazon_report import AmazonReport
+import pyderman as dr
+import warnings
+
+warnings.filterwarnings("ignore")
 
 class Amazon(webdriver.Chrome):
-    def __init__(self, driver_path=r"C:\SeleniumDrivers", teardown=False):
+    def __init__(self, driver_path=const.MAIN_PATH+'\\driver', teardown=False):
+        dr.install(dr.chrome, file_directory=rf'{driver_path}', overwrite=True, filename='chromedriver.exe', verbose=False)
         self.driver_path = driver_path
         self.teardown = teardown
         os.environ['PATH'] += ';'+self.driver_path
@@ -15,7 +20,7 @@ class Amazon(webdriver.Chrome):
         self.implicitly_wait(15)
         self.maximize_window()
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, *args):
         if self.teardown:
             self.quit()
 
@@ -36,9 +41,13 @@ class Amazon(webdriver.Chrome):
                 )
         filtration = AmazonFiltration(driver=self)
         filtration.show_categories(categories_element)
-        filtration.apply_category(categories_element)
+        category = filtration.apply_category(categories_element)
+        return category
 
     def report_results(self):
-        results_elements = self.find_elements_by_class_name(
-            'aok-inline-block.zg-item'
+        results_elements = self.find_elements_by_id(
+            'gridItemRoot'
             )
+        obj = AmazonReport(results_elements)
+        products_list = obj.get_items_attributes()
+        return products_list
